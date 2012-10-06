@@ -12,7 +12,7 @@
 @interface MatchmakingServer : NSObject<GKSessionDelegate>
 
 @property (nonatomic, assign) int maxClients;
-@property (nonatomic, strong) NSArray *connectedClieent;
+@property (nonatomic, strong) NSMutableArray *connectedClieent;
 @property (nonatomic, strong) GKSession *session;
 
 - (void)startAcceptingConnectionsForSeesionID:(NSString*) sessionId;

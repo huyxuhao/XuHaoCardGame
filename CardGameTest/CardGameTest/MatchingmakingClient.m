@@ -10,13 +10,22 @@
 
 @implementation MatchingmakingClient
 @synthesize session,availableServers;
+@synthesize delegate;
 
 #pragma Public methods
 - (void)startSearchingForServersWithSessionID:(NSString *)sessionID{
     self.availableServers = [NSMutableArray arrayWithCapacity:0];
     self.session = [[GKSession alloc] initWithSessionID:sessionID displayName:nil sessionMode:GKSessionModeClient];
-    self.session.delegate = self;
+    self.session.delegate = self;   
     self.session.available = YES;
+}
+
+- (NSString*)peerIDForAvailableServerAtIndex:(NSUInteger)index{
+    return [self.availableServers objectAtIndex:index];
+}
+
+- (NSString*)displayNameForPeerId:(NSString *)peerID{
+    return [self.session displayNameForPeer:peerID];
 }
 
 #pragma mark - GKSessionDelegate
@@ -26,6 +35,36 @@
 #ifdef DEBUG
 	NSLog(@"MatchmakingClient: peer %@ changed state %d", peerID, state);
 #endif
+    
+    //show the server to user
+    switch (state) {
+        //The client has discovered a new server
+        case GKPeerStateAvailable:
+            if(![availableServers containsObject:peerID]){
+                [availableServers addObject:peerID];
+                //delegate arising event 4 joinViewController here
+                [self.delegate MatchingmakingClient:self serverBecameAvailable:peerID];
+            }
+            break;
+            // The client sees that a server goes away.
+		case GKPeerStateUnavailable:
+			if ([availableServers containsObject:peerID])
+			{
+				[availableServers removeObject:peerID];
+                //delegate arising event 4 joinViewController here
+                [self.delegate MatchingmakingClient:self serverBecameUnAvailable:peerID];
+			}
+			break;
+            
+		case GKPeerStateConnected:
+			break;
+            
+		case GKPeerStateDisconnected:
+			break;
+            
+		case GKPeerStateConnecting:
+			break;
+    }
 }
 
 - (void)session:(GKSession *)session didReceiveConnectionRequestFromPeer:(NSString *)peerID
