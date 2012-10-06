@@ -23,6 +23,7 @@
 @property(nonatomic, strong) UILabel *statusLb;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) UIButton *exitButton;
+@property(nonatomic, strong) UIView *waitView;
 @property(nonatomic, unsafe_unretained) id<JoinViewControllerDelegate> delegate;
 - (void)doClickExit:(id)sender;
 

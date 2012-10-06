@@ -8,16 +8,44 @@
 
 #import "MatchingmakingClient.h"
 
-@implementation MatchingmakingClient
+typedef enum {
+    ClientStateIdle,
+    ClientStateSearchingForServers,
+    ClientStateConnecting,
+    ClientStateConnected,
+}
+ClientState;
+
+@implementation MatchingmakingClient {
+    ClientState clientState;
+    NSString *serverPeerID;    
+}
 @synthesize session,availableServers;
 @synthesize delegate;
 
+- (id)init{
+    if(self = [super init]){
+        clientState = ClientStateIdle;
+    }
+    
+    return self;
+}
+
 #pragma Public methods
 - (void)startSearchingForServersWithSessionID:(NSString *)sessionID{
+    clientState = ClientStateSearchingForServers;
     self.availableServers = [NSMutableArray arrayWithCapacity:0];
     self.session = [[GKSession alloc] initWithSessionID:sessionID displayName:nil sessionMode:GKSessionModeClient];
     self.session.delegate = self;   
     self.session.available = YES;
+}
+
+- (void)connectToServerWithPeerID:(NSString *)peerID{
+    NSAssert(clientState == ClientStateSearchingForServers, @"Wrong state");
+    
+    clientState = ClientStateConnecting;
+    serverPeerID = peerID;
+    [self.session connectToPeer:peerID withTimeout:self.session.disconnectTimeout];
 }
 
 - (NSString*)peerIDForAvailableServerAtIndex:(NSUInteger)index{
@@ -40,21 +68,25 @@
     switch (state) {
         //The client has discovered a new server
         case GKPeerStateAvailable:
-            if(![availableServers containsObject:peerID]){
-                [availableServers addObject:peerID];
-                //delegate arising event 4 joinViewController here
-                [self.delegate MatchingmakingClient:self serverBecameAvailable:peerID];
-            }
+            if(clientState == ClientStateSearchingForServers){
+                if(![availableServers containsObject:peerID]){
+                    [availableServers addObject:peerID];
+                    //delegate arising event 4 joinViewController here
+                    [self.delegate MatchingmakingClient:self serverBecameAvailable:peerID];
+                }
+            }            
             break;
             // The client sees that a server goes away.
 		case GKPeerStateUnavailable:
-			if ([availableServers containsObject:peerID])
-			{
-				[availableServers removeObject:peerID];
-                //delegate arising event 4 joinViewController here
-                [self.delegate MatchingmakingClient:self serverBecameUnAvailable:peerID];
-			}
-			break;
+            if(clientState == ClientStateSearchingForServers){
+                if ([availableServers containsObject:peerID])
+                {
+                    [availableServers removeObject:peerID];
+                    //delegate arising event 4 joinViewController here
+                    [self.delegate MatchingmakingClient:self serverBecameUnAvailable:peerID];
+                }
+                break;
+            }			
             
 		case GKPeerStateConnected:
 			break;
