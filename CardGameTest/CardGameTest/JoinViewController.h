@@ -15,7 +15,7 @@
 
 @end
 
-@interface JoinViewController : BaseViewController<UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface JoinViewController : BaseViewController<UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, MatchingmakingClientDelegate>
 
 @property(nonatomic, strong) UILabel *headingLb;
 @property(nonatomic, strong) UILabel *nameLb;

@@ -53,6 +53,7 @@
     
     if(!matchmakingClient){
         matchmakingClient  = [[MatchingmakingClient alloc] init];
+        matchmakingClient.delegate = self;
         [matchmakingClient startSearchingForServersWithSessionID:SESSION_ID];
         self.nameTf.placeholder = matchmakingClient.session.displayName;
         [self.tableView reloadData];
@@ -128,11 +129,31 @@
 }
 #pragma mark UITableView datasource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 0;
+    if(matchmakingClient){
+        return [matchmakingClient.availableServers count];
+    }else {
+        return 0;
+    }
 }
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return  nil;
+    static NSString *cellIdentifier = @"CellIdentifier";
+    UITableViewCell *cell =[self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if(!cell){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    NSString *peerId = [matchmakingClient peerIDForAvailableServerAtIndex:indexPath.row];
+    cell.textLabel.text = [matchmakingClient displayNameForPeerId:peerId];
+    return cell;
 }
 
 #pragma mark UITableView delegate
+
+#pragma mark MatchingmakingClient Delegate
+- (void)MatchingmakingClient:(MatchingmakingClient *)client serverBecameAvailable:(NSString *)peerID{
+    [self.tableView reloadData];
+}
+
+- (void)MatchingmakingClient:(MatchingmakingClient *)client serverBecameUnAvailable:(NSString *)peerID {
+    [self.tableView reloadData];
+}
 @end
