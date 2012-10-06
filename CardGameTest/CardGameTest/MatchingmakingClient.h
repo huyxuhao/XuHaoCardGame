@@ -28,5 +28,6 @@
 - (void)startSearchingForServersWithSessionID:(NSString*)sessionID;
 - (NSString*)peerIDForAvailableServerAtIndex:(NSUInteger)index;
 - (NSString*)displayNameForPeerId:(NSString*)peerID;
+- (void)connectToServerWithPeerID:(NSString*)peerID;
 
 @end

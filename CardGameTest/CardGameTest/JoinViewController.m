@@ -11,11 +11,12 @@
 @interface JoinViewController (){
     MatchingmakingClient * matchmakingClient;
 }
-
+- (void)initJoinView;
+- (void)initWaitView;
 @end
 
 @implementation JoinViewController
-@synthesize headingLb, nameLb, nameTf, statusLb, tableView, exitButton;
+@synthesize headingLb, nameLb, nameTf, statusLb, tableView, exitButton, waitView;
 @synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -122,6 +123,18 @@
     [self.view addSubview:self.exitButton];
 }
 
+- (void)initWaitView{
+    self.waitView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width)];
+    [self.waitView setBackgroundColor:[UIColor whiteColor]];
+    [self.waitView addSubview:self.exitButton];
+    UILabel *connectingLb = [[UILabel alloc] initWithFrame:CGRectMake(83, 147, 313, 27)];
+    [connectingLb setFont:[UIFont systemFontOfSize:16.0f]];
+    connectingLb.textAlignment = UITextAlignmentCenter;
+    connectingLb.textColor = [UIColor blackColor];
+    connectingLb.text = @"Connecting...";
+    [self.waitView addSubview:connectingLb];    
+}
+
 #pragma mark UITextField delegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
@@ -147,6 +160,18 @@
 }
 
 #pragma mark UITableView delegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if(matchmakingClient){
+        if(!self.waitView){
+            [self initWaitView];
+            [self.view addSubview:self.waitView];
+            
+            NSString *peerId = [matchmakingClient peerIDForAvailableServerAtIndex:indexPath.row];
+            [matchmakingClient connectToServerWithPeerID:peerId];
+        }        
+    }
+}
 
 #pragma mark MatchingmakingClient Delegate
 - (void)MatchingmakingClient:(MatchingmakingClient *)client serverBecameAvailable:(NSString *)peerID{
