@@ -52,6 +52,7 @@
     [super viewDidAppear:animated];
     if(!matchMakingServer){
         matchMakingServer = [[MatchmakingServer alloc] init];
+        matchMakingServer.delegate = self;
         matchMakingServer.maxClients =3;
         [matchMakingServer startAcceptingConnectionsForSeesionID:SESSION_ID];
         self.nameTf.placeholder = matchMakingServer.session.displayName;
@@ -143,13 +144,30 @@
 }
 
 #pragma mark UITableView delegate
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return nil;
+}
 
 #pragma mark UITableView datasource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 0;
+    if (matchMakingServer) {
+        return [matchMakingServer.connectedClieent count];
+    }else {
+        return 0;
+    }    
 }
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return  nil;
+    static NSString *CellIdentifier = @"CellIdentifier";
+    
+	UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	if (cell == nil)
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+	NSString *peerID = [matchMakingServer peerIDForConnectedClientAtIndex:indexPath.row];
+	cell.textLabel.text = [matchMakingServer displayNameForPeerID:peerID];
+    
+	return cell;
 }
 
 #pragma mark UITextField delegate
@@ -158,5 +176,15 @@
     return  NO;
 }
 
+#pragma mark MatchMakingServer delegate
+- (void)matchmakingServer:(MatchmakingServer *)server clientDidConnect:(NSString *)peerID
+{
+	[self.tableView reloadData];
+}
+
+- (void)matchmakingServer:(MatchmakingServer *)server clientDidDisconnect:(NSString *)peerID
+{
+	[self.tableView reloadData];
+}
 
 @end

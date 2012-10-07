@@ -15,7 +15,7 @@
 
 @end
 
-@interface HostViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource,UITextFieldDelegate>
+@interface HostViewController : BaseViewController<UITableViewDelegate, UITableViewDataSource,UITextFieldDelegate,MatchmakingServerDelegate>
 
 @property(nonatomic, strong) UILabel *headingLb;
 @property(nonatomic, strong) UILabel *nameLb;
