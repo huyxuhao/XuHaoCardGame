@@ -48,6 +48,17 @@ ClientState;
     [self.session connectToPeer:peerID withTimeout:self.session.disconnectTimeout];
 }
 
+- (void)disconnectFromServer {
+    NSAssert(clientState != ClientStateIdle, @"Wrong state");
+    clientState = ClientStateIdle;
+    [self.session disconnectFromAllPeers];
+    self.session.available = NO;    
+    self.session  = nil;
+    
+    availableServers = nil;    
+    [self.delegate MatchmakingClient:self didDisconnectFromServer:serverPeerID];    
+}
+
 - (NSString*)peerIDForAvailableServerAtIndex:(NSUInteger)index{
     return [self.availableServers objectAtIndex:index];
 }
@@ -87,11 +98,20 @@ ClientState;
                 }
                 break;
             }			
-            
+        // u're connected to the server    
 		case GKPeerStateConnected:
+            if(clientState == ClientStateConnecting){
+                clientState = ClientStateConnected;
+            }
 			break;
-            
+        // u're now no longer connected to the server    
 		case GKPeerStateDisconnected:
+#ifdef DEBUG
+            NSLog(@"%@: GKPeerStateDisConnected",self);
+#endif
+            if(clientState == ClientStateConnected){
+                [self disconnectFromServer];
+            }   
 			break;
             
 		case GKPeerStateConnecting:
@@ -111,6 +131,7 @@ ClientState;
 #ifdef DEBUG
 	NSLog(@"MatchmakingClient: connection with peer %@ failed %@", peerID, error);
 #endif
+    [self disconnectFromServer];
 }
 
 - (void)session:(GKSession *)session didFailWithError:(NSError *)error

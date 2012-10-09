@@ -15,6 +15,7 @@
 
 - (void)MatchingmakingClient:(MatchingmakingClient*)client serverBecameAvailable:(NSString*)peerID;
 - (void)MatchingmakingClient:(MatchingmakingClient*)client serverBecameUnAvailable:(NSString*)peerID;
+- (void)MatchmakingClient:(MatchingmakingClient *)client didDisconnectFromServer:(NSString *)peerID;
 
 
 @end
@@ -29,5 +30,6 @@
 - (NSString*)peerIDForAvailableServerAtIndex:(NSUInteger)index;
 - (NSString*)displayNameForPeerId:(NSString*)peerID;
 - (void)connectToServerWithPeerID:(NSString*)peerID;
+- (void)disconnectFromServer;
 
 @end
