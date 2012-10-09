@@ -105,8 +105,12 @@ ClientState;
             }			
         // u're connected to the server    
 		case GKPeerStateConnected:
+#ifdef DEBUG
+            NSLog(@"%@: GKPeerStateConnected",self);
+#endif
             if(clientState == ClientStateConnecting){
                 clientState = ClientStateConnected;
+                [self.delegate MatchmakingClient:self didConnectToServer:peerID];
             }
 			break;
         // u're now no longer connected to the server    

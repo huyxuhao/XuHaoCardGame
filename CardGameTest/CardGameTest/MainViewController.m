@@ -20,6 +20,7 @@
 
 @interface MainViewController (){
     BOOL buttonEnabled;
+    BOOL performAnimations;
 }
 - (void)initMenu;
 - (void)initCardView;
@@ -27,7 +28,7 @@
 - (void)performIntroAnim;
 - (void)showDisconnectedAlert;
 - (void)showNoNetworkAlert;
-
+- (void)startGameWithBlock:(void (^)(Game *))block;
 @end
 
 @implementation MainViewController
@@ -39,6 +40,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        performAnimations = YES;
     }
     return self;
 }
@@ -65,12 +67,16 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];    
-    [self prepareforIntroAnim];
+    if(performAnimations){
+        [self prepareforIntroAnim];
+    }    
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [self performIntroAnim];
+    if(performAnimations){
+        [self performIntroAnim];
+    }    
 }
 
 #pragma mark Button Methods
@@ -230,6 +236,25 @@
     [alertView show];
 }
 
+- (void)startGameWithBlock:(void (^)(Game *))block{
+    GameViewController *gameVc = [[GameViewController alloc] initWithNibName:nil bundle:nil];
+    gameVc.delegate = self;
+    Game *game = [[Game alloc] init];
+    if(SYSTEM_VERSION_LESS_THAN(@"5.0")){
+        [self presentModalViewController:gameVc animated:NO];        
+        gameVc.game = game;
+        game.delegate = gameVc;
+        block(game);
+    }else{
+        [self presentViewController:gameVc animated:NO completion:^{
+            Game *game = [[Game alloc] init];
+            gameVc.game = game;
+            game.delegate = gameVc;
+            block(game);
+        }];
+    }
+}
+
 #pragma mark HostViewContrller Delegate
 - (void)hostViewControllerDidCancel:(HostViewController *)controller{
     if(SYSTEM_VERSION_LESS_THAN(@"5.0")){
@@ -262,5 +287,46 @@
     }else if (reason == QuitReasonNoNetwork) {
         [self showNoNetworkAlert];
     }
+}
+- (void)joinViewController:(JoinViewController *)controller startGameWithSession:(GKSession *)session playerName:(NSString *)name server:(NSString *)peerID {
+    performAnimations = NO;
+    
+    if(SYSTEM_VERSION_LESS_THAN(@"5.0")){
+        [self dismissModalViewControllerAnimated:NO];            
+        performAnimations = YES;        
+        //start game here
+        [self startGameWithBlock:^(Game *game)
+         {
+             [game startClientGameWithSession:session playerName:name server:peerID];
+         }];
+        
+    }else{
+        [self dismissViewControllerAnimated:NO completion:^{
+            performAnimations = YES;
+            
+            //start game here
+            [self startGameWithBlock:^(Game *game)
+             {
+                 [game startClientGameWithSession:session playerName:name server:peerID];
+             }];
+        }];
+    }
+}
+
+#pragma mark GameViewcontroller Delegate
+- (void)gameViewController:(GameViewController *)controller didQuitWithReason:(QuitReason)reason{
+    if(SYSTEM_VERSION_LESS_THAN(@"5.0")){
+        [self dismissModalViewControllerAnimated:NO];            
+        [self showDisconnectedAlert];
+        
+    }else{
+        [self dismissViewControllerAnimated:NO completion:^
+         {
+             if (reason == QuitReasonConnectionDropped)
+             {
+                 [self showDisconnectedAlert];
+             }
+         }];
+    }    
 }
 @end
