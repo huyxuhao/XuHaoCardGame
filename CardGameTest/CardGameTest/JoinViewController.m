@@ -10,6 +10,7 @@
 
 @interface JoinViewController (){
     MatchingmakingClient * matchmakingClient;
+    QuitReason quitReason;
 }
 - (void)initJoinView;
 - (void)initWaitView;
@@ -53,6 +54,7 @@
     [super viewDidAppear:animated];
     
     if(!matchmakingClient){
+        quitReason = QuitReasonConnectionDropped;
         matchmakingClient  = [[MatchingmakingClient alloc] init];
         matchmakingClient.delegate = self;
         [matchmakingClient startSearchingForServersWithSessionID:SESSION_ID];
@@ -61,12 +63,20 @@
     }
 }
 
+- (void)dealloc
+{
+#ifdef DEBUG
+	NSLog(@"dealloc %@", self);
+#endif
+}
+
 #pragma mark Public methods
 - (void)doClickExit:(id)sender{
 #ifdef DEBUG
     NSLog(@"%@: click exit!",self);
 #endif
-    
+    quitReason = QuitReasonUserQuit;
+    [matchmakingClient disconnectFromServer];
     [self.delegate joinViewControllerDidCancel:self];
 }
 
@@ -180,5 +190,15 @@
 
 - (void)MatchingmakingClient:(MatchingmakingClient *)client serverBecameUnAvailable:(NSString *)peerID {
     [self.tableView reloadData];
+}
+
+- (void)MatchmakingClient:(MatchingmakingClient *)client didDisconnectFromServer:(NSString *)peerID {
+#if DEBUG
+    NSLog(@"%@: Disconnected From server",self);
+#endif    
+    matchmakingClient.delegate = nil;
+    matchmakingClient = nil;
+    [self.tableView reloadData];
+    [self.delegate joinViewController:self didDisconnectWithReason:quitReason];
 }
 @end

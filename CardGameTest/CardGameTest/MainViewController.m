@@ -25,6 +25,7 @@
 - (void)initCardView;
 - (void)prepareforIntroAnim;
 - (void)performIntroAnim;
+- (void)showDisconnectedAlert;
 
 @end
 
@@ -217,6 +218,12 @@
         buttonEnabled = YES;
     }];
 }
+
+- (void)showDisconnectedAlert{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Disconnected" message:@"You were disconnected from the game" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
+}
+
 #pragma mark HostViewContrller Delegate
 - (void)hostViewControllerDidCancel:(HostViewController *)controller{
     if(SYSTEM_VERSION_LESS_THAN(@"5.0")){
@@ -231,6 +238,21 @@
         [self dismissModalViewControllerAnimated:NO];
     }else{
         [self dismissViewControllerAnimated:NO completion:nil];
+    }
+}
+- (void)joinViewController:(JoinViewController *)controller didDisconnectWithReason:(QuitReason)reason{
+    if(reason){
+#ifdef DEBUG
+        NSLog(@"%@ : Disconected!",self);
+#endif
+        if(SYSTEM_VERSION_LESS_THAN(@"5.0")){
+            [self dismissModalViewControllerAnimated:NO];
+            [self showDisconnectedAlert];
+        }else{
+            [self dismissViewControllerAnimated:NO completion:^{
+                [self showDisconnectedAlert];
+            }];
+        }
     }
 }
 @end
