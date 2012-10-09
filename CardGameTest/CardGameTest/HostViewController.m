@@ -10,6 +10,7 @@
 
 @interface HostViewController () {
     MatchmakingServer *matchMakingServer;
+    QuitReason quitReason;
 }
 
 @end
@@ -140,6 +141,8 @@
     #ifdef DEBUG
     NSLog(@"HomeViewController: Exit Click!");    
     #endif    
+    quitReason = QuitReasonUserQuit;
+    [matchMakingServer endSession];
     [self.delegate hostViewControllerDidCancel:self];
 }
 
@@ -185,6 +188,19 @@
 - (void)matchmakingServer:(MatchmakingServer *)server clientDidDisconnect:(NSString *)peerID
 {
 	[self.tableView reloadData];
+}
+
+- (void)matchmakingServerSessionDidEnd:(MatchmakingServer *)server
+{
+	matchMakingServer.delegate = nil;
+	matchMakingServer = nil;
+	[self.tableView reloadData];
+	[self.delegate hostViewController:self didEndSessionWithReason:quitReason];
+}
+
+- (void)matchmakingServerNoNetwork:(MatchmakingServer *)session
+{
+	quitReason = QuitReasonNoNetwork;
 }
 
 @end

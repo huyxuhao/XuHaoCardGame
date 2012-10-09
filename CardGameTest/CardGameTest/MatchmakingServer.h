@@ -13,6 +13,8 @@
 
 - (void)matchmakingServer:(MatchmakingServer *)server clientDidConnect:(NSString *)peerID;
 - (void)matchmakingServer:(MatchmakingServer *)server clientDidDisconnect:(NSString *)peerID;
+- (void)matchmakingServerSessionDidEnd:(MatchmakingServer *)server;
+- (void)matchmakingServerNoNetwork:(MatchmakingServer *)server;
 
 @end
 
@@ -25,4 +27,5 @@
 - (void)startAcceptingConnectionsForSeesionID:(NSString*) sessionId;
 - (NSString *)peerIDForConnectedClientAtIndex:(NSUInteger)index;
 - (NSString *)displayNameForPeerID:(NSString *)peerID;
+- (void)endSession;
 @end

@@ -238,6 +238,13 @@
     [self dismissViewControllerAnimated:NO completion:nil];
     }
 }
+- (void)hostViewController:(HostViewController *)controller didEndSessionWithReason:(QuitReason)reason
+{
+	if (reason == QuitReasonNoNetwork)
+	{
+		[self showNoNetworkAlert];
+	}
+}
 #pragma mark JoinViewController Delegate
 - (void)joinViewControllerDidCancel:(JoinViewController *)controller{
     if(SYSTEM_VERSION_LESS_THAN(@"5.0")){

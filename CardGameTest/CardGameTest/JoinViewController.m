@@ -77,7 +77,7 @@
 #endif
     quitReason = QuitReasonUserQuit;
     [matchmakingClient disconnectFromServer];
-//    [self.delegate joinViewControllerDidCancel:self];
+    [self.delegate joinViewControllerDidCancel:self];
 }
 
 #pragma mark Private methods

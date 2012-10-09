@@ -53,6 +53,7 @@ ClientState;
     clientState = ClientStateIdle;
     [self.session disconnectFromAllPeers];
     self.session.available = NO;    
+    self.session.delegate = nil;
     self.session  = nil;
     
     availableServers = nil;    
