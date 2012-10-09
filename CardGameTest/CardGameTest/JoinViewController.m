@@ -77,13 +77,13 @@
 #endif
     quitReason = QuitReasonUserQuit;
     [matchmakingClient disconnectFromServer];
-//    [self.delegate joinViewControllerDidCancel:self];
+    [self.delegate joinViewControllerDidCancel:self];
 }
 
 #pragma mark Private methods
 - (void)initJoinView{
 #ifdef DEBUG
-    NSLog(@"%@: Init hostview!",self);
+    NSLog(@"%@: Init JoinView!",self);
 #endif
     
     //heading lb
@@ -190,6 +190,14 @@
 
 - (void)MatchingmakingClient:(MatchingmakingClient *)client serverBecameUnAvailable:(NSString *)peerID {
     [self.tableView reloadData];
+}
+
+- (void)MatchmakingClient:(MatchingmakingClient *)client didConnectToServer:(NSString *)peerID {
+    NSString *name = [self.nameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if([name length] == 0){
+        name = matchmakingClient.session.displayName;
+    }
+    [self.delegate joinViewController:self startGameWithSession:matchmakingClient.session playerName:name server:peerID];
 }
 
 - (void)MatchmakingClient:(MatchingmakingClient *)client didDisconnectFromServer:(NSString *)peerID {
