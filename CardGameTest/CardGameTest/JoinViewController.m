@@ -77,7 +77,7 @@
 #endif
     quitReason = QuitReasonUserQuit;
     [matchmakingClient disconnectFromServer];
-    [self.delegate joinViewControllerDidCancel:self];
+//    [self.delegate joinViewControllerDidCancel:self];
 }
 
 #pragma mark Private methods
@@ -200,5 +200,8 @@
     matchmakingClient = nil;
     [self.tableView reloadData];
     [self.delegate joinViewController:self didDisconnectWithReason:quitReason];
+}
+- (void)MatchmakingClientNoNetwork:(id)client{
+    quitReason = QuitReasonNoNetwork;
 }
 @end

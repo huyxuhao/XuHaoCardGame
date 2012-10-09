@@ -96,6 +96,11 @@ ClientState;
                     //delegate arising event 4 joinViewController here
                     [self.delegate MatchingmakingClient:self serverBecameUnAvailable:peerID];
                 }
+                
+                if(clientState == ClientStateConnecting && [peerID isEqualToString:serverPeerID]){
+                    [self disconnectFromServer];
+                }
+                
                 break;
             }			
         // u're connected to the server    
@@ -139,6 +144,11 @@ ClientState;
 #ifdef DEBUG
 	NSLog(@"MatchmakingClient: session failed %@", error);
 #endif
+    
+    if([[error domain] isEqualToString:GKSessionErrorDomain]){
+        [self.delegate MatchmakingClientNoNetwork:self];
+        [self disconnectFromServer];
+    }
 }
 
 

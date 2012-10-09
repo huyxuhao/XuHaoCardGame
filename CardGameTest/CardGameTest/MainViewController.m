@@ -26,6 +26,7 @@
 - (void)prepareforIntroAnim;
 - (void)performIntroAnim;
 - (void)showDisconnectedAlert;
+- (void)showNoNetworkAlert;
 
 @end
 
@@ -224,6 +225,11 @@
     [alertView show];
 }
 
+- (void)showNoNetworkAlert{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"No Network" message:@"To use multiplayer, please enable Bluetooth or Wi-Fi in your device's Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
+}
+
 #pragma mark HostViewContrller Delegate
 - (void)hostViewControllerDidCancel:(HostViewController *)controller{
     if(SYSTEM_VERSION_LESS_THAN(@"5.0")){
@@ -241,7 +247,7 @@
     }
 }
 - (void)joinViewController:(JoinViewController *)controller didDisconnectWithReason:(QuitReason)reason{
-    if(reason){
+    if(reason == QuitReasonConnectionDropped){
 #ifdef DEBUG
         NSLog(@"%@ : Disconected!",self);
 #endif
@@ -253,6 +259,8 @@
                 [self showDisconnectedAlert];
             }];
         }
+    }else if (reason == QuitReasonNoNetwork) {
+        [self showNoNetworkAlert];
     }
 }
 @end
