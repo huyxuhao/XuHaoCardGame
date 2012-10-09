@@ -10,8 +10,8 @@
 #import "BaseViewController.h"
 #import "HostViewController.h"
 #import "JoinViewController.h"
-
-@interface MainViewController : BaseViewController<HostViewControllerDelegate,JoinViewControllerDelegate>
+#import "GameViewController.h"
+@interface MainViewController : BaseViewController<HostViewControllerDelegate,JoinViewControllerDelegate,GameViewControllerDelegate>
 
 @property(nonatomic,strong) UIButton *hostgameBtn;
 @property(nonatomic,strong) UIButton *joingameBtn;

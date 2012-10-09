@@ -179,11 +179,17 @@
 #pragma mark MatchMakingServer delegate
 - (void)matchmakingServer:(MatchmakingServer *)server clientDidConnect:(NSString *)peerID
 {
+#ifdef DEBUG
+    NSLog(@"%@ : client did connect with id:%@",self,peerID);
+#endif
 	[self.tableView reloadData];
 }
 
 - (void)matchmakingServer:(MatchmakingServer *)server clientDidDisconnect:(NSString *)peerID
 {
+#ifdef DEBUG
+    NSLog(@"%@ : client did dis connect with id:%@",self,peerID);
+#endif    
 	[self.tableView reloadData];
 }
 
