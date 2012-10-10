@@ -13,6 +13,7 @@
 
 - (void)game:(Game*)game didQuitWithReason:(QuitReason)reason;
 - (void)gameWaitingForServerReady:(Game *)game;
+- (void)gameWaitingForClientsReady:(Game *)game;
 
 @end
 
@@ -22,6 +23,7 @@
 @property (nonatomic,unsafe_unretained) id<GameDelegate> delegate;
 
 - (void)startClientGameWithSession:(GKSession *)gkSession playerName:(NSString *)name server:(NSString *)peerID;
+- (void)startServerGameWithSession:(GKSession *)gkSession playerName:(NSString *)name clients:(NSArray *)clients;
 - (void)quitGameWithReason:(QuitReason)reason;
 
 @end

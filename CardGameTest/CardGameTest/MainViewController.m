@@ -263,6 +263,31 @@
     [self dismissViewControllerAnimated:NO completion:nil];
     }
 }
+
+- (void)hostViewController:(HostViewController *)controller startGameWithSession:(GKSession *)session playerName:(NSString *)name clients:(NSArray *)clients {
+    performAnimations = NO;
+    
+    if(SYSTEM_VERSION_LESS_THAN(@"5.0")){
+        [self dismissModalViewControllerAnimated:NO];            
+        performAnimations = YES;        
+        //start game here
+        [self startGameWithBlock:^(Game *game)
+         {
+             [game startServerGameWithSession:session playerName:name clients:clients];
+         }];
+        
+    }else{
+        [self dismissViewControllerAnimated:NO completion:^{
+            performAnimations = YES;
+            
+            //start game here
+            [self startGameWithBlock:^(Game *game)
+             {
+                 [game startServerGameWithSession:session playerName:name clients:clients];
+             }];
+        }];
+    }
+}
 #pragma mark JoinViewController Delegate
 - (void)joinViewControllerDidCancel:(JoinViewController *)controller{
     if(SYSTEM_VERSION_LESS_THAN(@"5.0")){

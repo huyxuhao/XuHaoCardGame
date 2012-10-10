@@ -38,6 +38,12 @@ ServerState;
         self.session.available =YES;
     }    
 }
+- (void)stopAcceptingConnections{
+    NSAssert(serverState == ServerStateAcceptConnections, @"Wrong state");
+    
+    serverState = ServerStateIgnoringNewConnections;
+    self.session.available = NO;
+}
 - (NSString *)peerIDForConnectedClientAtIndex:(NSUInteger)index
 {
 	return [connectedClieent objectAtIndex:index];
