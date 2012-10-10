@@ -133,7 +133,16 @@
 - (void)doClickStart:(id)sender{
     #ifdef DEBUG
     NSLog(@"HomeViewController: Start Click!");    
-    #endif        
+    #endif      
+    
+    if(matchMakingServer && [matchMakingServer.connectedClieent count] > 0){
+        NSString *name = [self.nameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if([name length] == 0){
+            name = matchMakingServer.session.displayName;
+            [matchMakingServer stopAcceptingConnections];
+            [self.delegate hostViewController:self startGameWithSession:matchMakingServer.session playerName:name clients:matchMakingServer.connectedClieent];
+        }
+    }
 }
 
 - (void)doClickExit:(id)sender{
