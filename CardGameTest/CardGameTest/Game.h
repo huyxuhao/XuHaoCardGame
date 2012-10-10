@@ -7,6 +7,7 @@
 //
 
 #import <GameKit/GameKit.h>
+#import "Player.h"
 
 @class Game;
 @protocol GameDelegate <NSObject>

@@ -52,6 +52,7 @@
 		9DC31B5F161EC57A00CB53E8 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC31B5E161EC57A00CB53E8 /* GameKit.framework */; };
 		9DC31B63161EC5CF00CB53E8 /* MatchmakingServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DC31B62161EC5CF00CB53E8 /* MatchmakingServer.m */; };
 		9DC31B67161EDF6700CB53E8 /* MatchingmakingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DC31B66161EDF6700CB53E8 /* MatchingmakingClient.m */; };
+		9DCE848D1625204300D940A7 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DCE848C1625204300D940A7 /* Player.m */; };
 		9DED3059161D4CA400CFE9E5 /* UIFont+SnapAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DED3058161D4CA400CFE9E5 /* UIFont+SnapAdditions.m */; };
 /* End PBXBuildFile section */
 
@@ -114,6 +115,8 @@
 		9DC31B62161EC5CF00CB53E8 /* MatchmakingServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchmakingServer.m; sourceTree = "<group>"; };
 		9DC31B65161EDF6700CB53E8 /* MatchingmakingClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatchingmakingClient.h; sourceTree = "<group>"; };
 		9DC31B66161EDF6700CB53E8 /* MatchingmakingClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MatchingmakingClient.m; sourceTree = "<group>"; };
+		9DCE848B1625204300D940A7 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		9DCE848C1625204300D940A7 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 		9DED3057161D4CA400CFE9E5 /* UIFont+SnapAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+SnapAdditions.h"; sourceTree = "<group>"; };
 		9DED3058161D4CA400CFE9E5 /* UIFont+SnapAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+SnapAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -330,6 +333,8 @@
 				9D5D7DCE161D917000683852 /* BaseViewController.m */,
 				9D058D2616240DAB009A5959 /* Game.h */,
 				9D058D2716240DAB009A5959 /* Game.m */,
+				9DCE848B1625204300D940A7 /* Player.h */,
+				9DCE848C1625204300D940A7 /* Player.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -446,6 +451,7 @@
 				9DC31B67161EDF6700CB53E8 /* MatchingmakingClient.m in Sources */,
 				9D058D2516240B72009A5959 /* GameViewController.m in Sources */,
 				9D058D2816240DAB009A5959 /* Game.m in Sources */,
+				9DCE848D1625204300D940A7 /* Player.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
