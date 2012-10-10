@@ -23,8 +23,18 @@ typedef enum {
     GKSession *session;
     NSString *serverPeerId;
     NSString *localPlayerName;
+    
+    NSMutableDictionary *players;
 }
 @synthesize delegate, isServer;
+
+- (id)init{
+    if((self = [super init])){
+        players = [NSMutableDictionary dictionaryWithCapacity:4];
+    }
+    
+    return self;
+}
 
 - (void)dealloc
 {
@@ -64,6 +74,30 @@ typedef enum {
 	state = GameStateWaitingForSignIn;
     
 	[self.delegate gameWaitingForClientsReady:self];
+    
+    //Create the Player object for the server
+    Player *player = [[Player alloc] init];
+    player.name  = name;
+    player.peerID = session.peerID;
+    player.position = PlayerPositionBottom;
+    
+    //Add a player object for each client
+    int index = 0;
+    for(NSString *peerID in clients){
+        Player *player = [[Player alloc] init];
+        player.peerID = peerID;
+        [players setObject:player forKey:player.peerID];
+        
+        if (index == 0){
+            player.position = ([clients count] == 1) ? PlayerPositionTop:PlayerPositionLeft;
+        }else if(index == 1){
+            player.position = PlayerPositionTop;            
+        }else {
+            player.position = PlayerPositionRight;
+        }
+        
+        index ++;
+    }
 }
 
 - (void)quitGameWithReason:(QuitReason)reason{
