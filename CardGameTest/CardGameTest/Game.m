@@ -54,6 +54,18 @@ typedef enum {
     
 }
 
+- (void)startServerGameWithSession:(GKSession *)gkSession playerName:(NSString *)name clients:(NSArray *)clients {
+    self.isServer = YES;    
+	session = gkSession;
+	session.available = NO;
+	session.delegate = self;
+	[session setDataReceiveHandler:self withContext:nil];
+    
+	state = GameStateWaitingForSignIn;
+    
+	[self.delegate gameWaitingForClientsReady:self];
+}
+
 - (void)quitGameWithReason:(QuitReason)reason{
     state = GameStateQuitting;
     

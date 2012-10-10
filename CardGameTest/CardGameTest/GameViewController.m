@@ -91,5 +91,9 @@
 	self.centerLb.text = NSLocalizedString(@"Waiting for game to start...", @"Status text: waiting for server");
 }
 
+- (void)gameWaitingForClientsReady:(Game *)game
+{
+	self.centerLb.text = NSLocalizedString(@"Waiting for other players...", @"Status text: waiting for clients");
+}
 
 @end
