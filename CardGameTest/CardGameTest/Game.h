@@ -8,6 +8,7 @@
 
 #import <GameKit/GameKit.h>
 #import "Player.h"
+#import "Packet.h"
 
 @class Game;
 @protocol GameDelegate <NSObject>
@@ -26,5 +27,6 @@
 - (void)startClientGameWithSession:(GKSession *)gkSession playerName:(NSString *)name server:(NSString *)peerID;
 - (void)startServerGameWithSession:(GKSession *)gkSession playerName:(NSString *)name clients:(NSArray *)clients;
 - (void)quitGameWithReason:(QuitReason)reason;
+- (void)sendPacketToAllClients:(Packet *)packet;
 
 @end

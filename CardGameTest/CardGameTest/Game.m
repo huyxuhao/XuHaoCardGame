@@ -45,6 +45,19 @@ typedef enum {
 
 #pragma mark Private Methods
 
+#pragma mark - Networking
+
+- (void)sendPacketToAllClients:(Packet *)packet
+{
+	GKSendDataMode dataMode = GKSendDataReliable;
+	NSData *data = [packet data];
+	NSError *error;
+	if (![session sendDataToAllPeers:data withDataMode:dataMode error:&error])
+	{
+		NSLog(@"Error sending data to clients: %@", error);
+	}
+}
+
 #pragma mark Public Methods [Game logic]
 - (void)startClientGameWithSession:(GKSession *)gkSession playerName:(NSString *)name server:(NSString *)peerID {
     
@@ -98,6 +111,9 @@ typedef enum {
         
         index ++;
     }
+    
+    Packet *packet = [Packet packetWithType:PacketTypeSignInRequest];
+    [self sendPacketToAllClients:packet];
 }
 
 - (void)quitGameWithReason:(QuitReason)reason{
