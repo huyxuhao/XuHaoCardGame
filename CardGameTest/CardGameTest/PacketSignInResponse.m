@@ -9,7 +9,6 @@
 #import "PacketSignInResponse.h"
 
 @implementation PacketSignInResponse
-
 @synthesize playerName;
 
 + (id)packetWithPlayerName:(NSString *)pName {
@@ -23,6 +22,13 @@
 		self.playerName = pName;
 	}
 	return self;
+}
+
++ (id)packetWithData:(NSData *)data
+{
+	size_t count;
+	NSString *playerName = [data rw_stringAtOffset:PACKET_HEADER_SIZE bytesRead:&count];
+	return [[self class] packetWithPlayerName:playerName];
 }
 
 - (void)addPayloadToData:(NSMutableData *)data
