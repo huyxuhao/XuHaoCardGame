@@ -9,6 +9,7 @@
 #import <GameKit/GameKit.h>
 #import "Player.h"
 #import "Packet.h"
+#import "PacketSignInResponse.h"
 
 @class Game;
 @protocol GameDelegate <NSObject>
@@ -30,5 +31,7 @@
 - (void)sendPacketToAllClients:(Packet *)packet;
 - (void)sendPacketToServer:(Packet *)packet;
 - (void)clientReceivedPacket:(Packet *)packet;
+- (Player *)playerWithPeerID:(NSString *)peerID;
+- (void)serverReceivedPacket:(Packet *)packet fromPlayer:(Player *)player;
 
 @end
