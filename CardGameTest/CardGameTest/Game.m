@@ -46,7 +46,7 @@ typedef enum {
 #pragma mark Private Methods
 
 #pragma mark - Networking
-
+    
 - (void)sendPacketToAllClients:(Packet *)packet
 {
     [players enumerateKeysAndObjectsUsingBlock:^(id key, Player *obj, BOOL *stop) {
@@ -83,7 +83,15 @@ typedef enum {
 				[self sendPacketToServer:packet];
 			}
 			break;
-            
+        case PacketTypeServerReady:
+			if (state == GameStateWaitingForReady)
+			{
+				players = ((PacketServerReady *)packet).players;
+#ifdef DEBUG
+				NSLog(@"the players are: %@", players);
+#endif
+			}
+			break;            
 		default:
 #ifdef DEBUG
 			NSLog(@"Client received unexpected packet: %@", packet);
@@ -103,10 +111,13 @@ typedef enum {
 #endif
                 
                 if([self receivedResponsesFromAllPlayers]){
-                    state = GameStateWaitingForReady;
+                    state = GameStateWaitingForReady;                    
 #ifdef DEBUG
                     NSLog(@"%@: all clients have signed in", self);
 #endif
+                    //send packet ready to client here
+                    Packet *packet = [PacketServerReady packetWithPlayers:players];
+                    [self sendPacketToAllClients:packet];
                 }
 			}
 			break;
@@ -245,7 +256,7 @@ typedef enum {
     Packet *packet = [Packet packetWithData:data];
     if(packet == nil){
 #ifdef DEBUG
-        NSLog(@"Invalid packet: %@",data);
+        NSLog(@"%@: Invalid packet: %@",self,data);
         return;
 #endif
     }
