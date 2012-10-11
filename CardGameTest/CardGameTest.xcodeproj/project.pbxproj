@@ -49,6 +49,7 @@
 		9D5D7DCF161D917000683852 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D7DCE161D917000683852 /* BaseViewController.m */; };
 		9D5D7DD2161D91D700683852 /* HostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D5D7DD1161D91D700683852 /* HostViewController.m */; };
 		9D98AAE71626638700978404 /* PacketSignInResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D98AAE61626638700978404 /* PacketSignInResponse.m */; };
+		9DA751A61626C60100C37C41 /* PacketServerReady.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA751A51626C60100C37C41 /* PacketServerReady.m */; };
 		9DC31B5C161EBB0000CB53E8 /* JoinViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DC31B5B161EBB0000CB53E8 /* JoinViewController.m */; };
 		9DC31B5F161EC57A00CB53E8 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC31B5E161EC57A00CB53E8 /* GameKit.framework */; };
 		9DC31B63161EC5CF00CB53E8 /* MatchmakingServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DC31B62161EC5CF00CB53E8 /* MatchmakingServer.m */; };
@@ -113,6 +114,8 @@
 		9D5D7DD1161D91D700683852 /* HostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HostViewController.m; sourceTree = "<group>"; };
 		9D98AAE51626638700978404 /* PacketSignInResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketSignInResponse.h; sourceTree = "<group>"; };
 		9D98AAE61626638700978404 /* PacketSignInResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PacketSignInResponse.m; sourceTree = "<group>"; };
+		9DA751A41626C60100C37C41 /* PacketServerReady.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketServerReady.h; sourceTree = "<group>"; };
+		9DA751A51626C60100C37C41 /* PacketServerReady.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PacketServerReady.m; sourceTree = "<group>"; };
 		9DC31B5A161EBB0000CB53E8 /* JoinViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoinViewController.h; sourceTree = "<group>"; };
 		9DC31B5B161EBB0000CB53E8 /* JoinViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JoinViewController.m; sourceTree = "<group>"; };
 		9DC31B5E161EC57A00CB53E8 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
@@ -291,6 +294,46 @@
 			name = JoinView;
 			sourceTree = "<group>";
 		};
+		9DA7519F1626C5C100C37C41 /* BaseView */ = {
+			isa = PBXGroup;
+			children = (
+				9D5D7DCD161D917000683852 /* BaseViewController.h */,
+				9D5D7DCE161D917000683852 /* BaseViewController.m */,
+			);
+			name = BaseView;
+			sourceTree = "<group>";
+		};
+		9DA751A11626C5CF00C37C41 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				9D058D2616240DAB009A5959 /* Game.h */,
+				9D058D2716240DAB009A5959 /* Game.m */,
+			);
+			name = Game;
+			sourceTree = "<group>";
+		};
+		9DA751A21626C5D400C37C41 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				9DCE848B1625204300D940A7 /* Player.h */,
+				9DCE848C1625204300D940A7 /* Player.m */,
+			);
+			name = Player;
+			sourceTree = "<group>";
+		};
+		9DA751A31626C5D900C37C41 /* Packet */ = {
+			isa = PBXGroup;
+			children = (
+				9DCE849B16252A5A00D940A7 /* Packet.h */,
+				9DCE849C16252A5A00D940A7 /* Packet.m */,
+				9D98AAE51626638700978404 /* PacketSignInResponse.h */,
+				9D98AAE61626638700978404 /* PacketSignInResponse.m */,
+				9DA751A41626C60100C37C41 /* PacketServerReady.h */,
+				9DA751A51626C60100C37C41 /* PacketServerReady.m */,
+			);
+			name = Packet;
+			sourceTree = "<group>";
+		};
 		9DC31B60161EC5AD00CB53E8 /* Server helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -338,16 +381,10 @@
 		9DED3055161D4C6700CFE9E5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				9D5D7DCD161D917000683852 /* BaseViewController.h */,
-				9D5D7DCE161D917000683852 /* BaseViewController.m */,
-				9D058D2616240DAB009A5959 /* Game.h */,
-				9D058D2716240DAB009A5959 /* Game.m */,
-				9DCE848B1625204300D940A7 /* Player.h */,
-				9DCE848C1625204300D940A7 /* Player.m */,
-				9DCE849B16252A5A00D940A7 /* Packet.h */,
-				9DCE849C16252A5A00D940A7 /* Packet.m */,
-				9D98AAE51626638700978404 /* PacketSignInResponse.h */,
-				9D98AAE61626638700978404 /* PacketSignInResponse.m */,
+				9DA751A31626C5D900C37C41 /* Packet */,
+				9DA751A21626C5D400C37C41 /* Player */,
+				9DA751A11626C5CF00C37C41 /* Game */,
+				9DA7519F1626C5C100C37C41 /* BaseView */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -470,6 +507,7 @@
 				9DCE849D16252A5A00D940A7 /* Packet.m in Sources */,
 				9DCE84A116252E0600D940A7 /* NSData+SnapAdditions.m in Sources */,
 				9D98AAE71626638700978404 /* PacketSignInResponse.m in Sources */,
+				9DA751A61626C60100C37C41 /* PacketServerReady.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

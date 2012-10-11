@@ -8,6 +8,7 @@
 
 #import "Packet.h"
 #import "PacketSignInResponse.h"
+#import "PacketServerReady.h"
 
 const size_t PACKET_HEADER_SIZE = 10;
 
@@ -51,8 +52,13 @@ const size_t PACKET_HEADER_SIZE = 10;
 			packet = [PacketSignInResponse packetWithData:data];
 			break;
             
+        case PacketTypeServerReady:
+            packet = [PacketServerReady packetWithData:data];
+            break;
 		default:
-			NSLog(@"Error: Packet has invalid type");
+#ifdef DEBUG
+			NSLog(@"%@ Error: Packet has invalid type",self);
+#endif
 			return nil;
 	}
     
