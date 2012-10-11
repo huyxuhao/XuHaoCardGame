@@ -10,6 +10,7 @@
 
 @implementation Player
 @synthesize position, name, peerID;
+@synthesize receivedResponse;
 
 - (void)dealloc{
 #ifdef DEBUG

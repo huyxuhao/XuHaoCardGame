@@ -49,6 +49,10 @@ typedef enum {
 
 - (void)sendPacketToAllClients:(Packet *)packet
 {
+    [players enumerateKeysAndObjectsUsingBlock:^(id key, Player *obj, BOOL *stop) {
+        obj.receivedResponse = [session.peerID isEqualToString:obj.peerID];
+    }];
+    
 	GKSendDataMode dataMode = GKSendDataReliable;
 	NSData *data = [packet data];
 	NSError *error;
@@ -95,8 +99,15 @@ typedef enum {
 			{
 				player.name = ((PacketSignInResponse *)packet).playerName;
 #ifdef DEBUG          
-				NSLog(@"server received sign in from client '%@'", player.name);
+				NSLog(@"%@: server received sign in from client '%@'", self,player.name);
 #endif
+                
+                if([self receivedResponsesFromAllPlayers]){
+                    state = GameStateWaitingForReady;
+#ifdef DEBUG
+                    NSLog(@"%@: all clients have signed in", self);
+#endif
+                }
 			}
 			break;
             
@@ -180,6 +191,16 @@ typedef enum {
     return [players objectForKey:peerID];
 }
 
+- (BOOL)receivedResponsesFromAllPlayers {
+    for (NSString *peerID in players)
+	{
+		Player *player = [self playerWithPeerID:peerID];
+		if (!player.receivedResponse)
+			return NO;
+	}
+	return YES;
+}
+
 #pragma mark GKSessionDelegate
 
 - (void)session:(GKSession *)session peer:(NSString *)peerID didChangeState:(GKPeerConnectionState)gkState
@@ -230,6 +251,10 @@ typedef enum {
     }
     
     Player *player = [self playerWithPeerID:peerID];
+    
+    if(player){
+        player.receivedResponse = YES;
+    }
     
     if(self.isServer){
         [self serverReceivedPacket:packet fromPlayer:player];
