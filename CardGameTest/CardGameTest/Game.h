@@ -33,5 +33,5 @@
 - (void)clientReceivedPacket:(Packet *)packet;
 - (Player *)playerWithPeerID:(NSString *)peerID;
 - (void)serverReceivedPacket:(Packet *)packet fromPlayer:(Player *)player;
-
+- (BOOL)receivedResponsesFromAllPlayers;
 @end
