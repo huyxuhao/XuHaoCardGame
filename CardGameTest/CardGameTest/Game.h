@@ -10,6 +10,7 @@
 #import "Player.h"
 #import "Packet.h"
 #import "PacketSignInResponse.h"
+#import "PacketServerReady.h"
 
 @class Game;
 @protocol GameDelegate <NSObject>
