@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Anlab. All rights reserved.
 //
 
+#import "NSData+SnapAdditions.h"
+
 typedef enum {
     PacketTypeSignInRequest = 0x64,    //Server to client
     PacketTypeSiginInResponse,         //client to server
@@ -34,7 +36,9 @@ typedef enum {
 @property(nonatomic, assign) PacketType packetType;
 
 + (id)packetWithType:(PacketType)pkType;
++ (id)packetWithData:(NSData*)data;
 - (id)initWithType:(PacketType)pkType;
+- (void)addPayloadToData:(NSMutableData *)data;
 
 - (NSData*)data;
 

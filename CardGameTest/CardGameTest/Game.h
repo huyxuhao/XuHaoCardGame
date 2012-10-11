@@ -28,5 +28,7 @@
 - (void)startServerGameWithSession:(GKSession *)gkSession playerName:(NSString *)name clients:(NSArray *)clients;
 - (void)quitGameWithReason:(QuitReason)reason;
 - (void)sendPacketToAllClients:(Packet *)packet;
+- (void)sendPacketToServer:(Packet *)packet;
+- (void)clientReceivedPacket:(Packet *)packet;
 
 @end

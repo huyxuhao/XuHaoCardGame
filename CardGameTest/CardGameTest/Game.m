@@ -7,6 +7,7 @@
 //
 
 #import "Game.h"
+#import "PacketSignInResponse.h"
 
 typedef enum {
     GameStateWaitingForSignIn,
@@ -56,6 +57,35 @@ typedef enum {
 	{
 		NSLog(@"Error sending data to clients: %@", error);
 	}
+}
+
+- (void)sendPacketToServer:(Packet *)packet{
+    GKSendDataMode dataMode = GKSendDataReliable;
+    NSData *data =  [packet data];
+    NSError *error;
+    
+    if (![session sendData:data toPeers:[NSArray arrayWithObject:serverPeerId] withDataMode:dataMode error:&error])
+	{
+		NSLog(@"Error sending data to server: %@", error);
+	}
+}
+
+- (void)clientReceivedPacket:(Packet *)packet {
+    switch (packet.packetType) {
+        case PacketTypeSignInRequest:
+			if (state == GameStateWaitingForSignIn)
+			{
+				state = GameStateWaitingForReady;
+                
+				Packet *packet = [PacketSignInResponse packetWithPlayerName:localPlayerName];
+				[self sendPacketToServer:packet];
+			}
+			break;
+            
+		default:
+			NSLog(@"Client received unexpected packet: %@", packet);
+			break;
+    }
 }
 
 #pragma mark Public Methods [Game logic]
@@ -167,6 +197,15 @@ typedef enum {
 #ifdef DEBUG
 	NSLog(@"Game: receive data from peer: %@, data: %@, length: %d", peerID, data, [data length]);
 #endif
+    Packet *packet = [Packet packetWithData:data];
+    if(packet == nil){
+#ifdef DEBUG
+        NSLog(@"Invalid packet: %@",data);
+        return;
+#endif
+    }
+    
+    [self clientReceivedPacket:packet];
 }
 
 @end
