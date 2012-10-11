@@ -7,7 +7,6 @@
 //
 
 #import "Game.h"
-#import "PacketSignInResponse.h"
 
 typedef enum {
     GameStateWaitingForSignIn,
@@ -76,14 +75,35 @@ typedef enum {
 			if (state == GameStateWaitingForSignIn)
 			{
 				state = GameStateWaitingForReady;
-                
 				Packet *packet = [PacketSignInResponse packetWithPlayerName:localPlayerName];
 				[self sendPacketToServer:packet];
 			}
 			break;
             
 		default:
+#ifdef DEBUG
 			NSLog(@"Client received unexpected packet: %@", packet);
+#endif
+			break;
+    }
+}
+
+- (void)serverReceivedPacket:(Packet *)packet fromPlayer:(Player *)player{
+    switch (packet.packetType) {
+        case PacketTypeSiginInResponse:
+			if (state == GameStateWaitingForSignIn)
+			{
+				player.name = ((PacketSignInResponse *)packet).playerName;
+#ifdef DEBUG          
+				NSLog(@"server received sign in from client '%@'", player.name);
+#endif
+			}
+			break;
+            
+		default:
+#ifdef DEBUG
+			NSLog(@"Server received unexpected packet: %@", packet);
+#endif
 			break;
     }
 }
@@ -156,6 +176,10 @@ typedef enum {
 	[self.delegate game:self didQuitWithReason:reason];
 }
 
+- (Player*)playerWithPeerID:(NSString *)peerID{
+    return [players objectForKey:peerID];
+}
+
 #pragma mark GKSessionDelegate
 
 - (void)session:(GKSession *)session peer:(NSString *)peerID didChangeState:(GKPeerConnectionState)gkState
@@ -205,7 +229,13 @@ typedef enum {
 #endif
     }
     
-    [self clientReceivedPacket:packet];
+    Player *player = [self playerWithPeerID:peerID];
+    
+    if(self.isServer){
+        [self serverReceivedPacket:packet fromPlayer:player];
+    }else{
+        [self clientReceivedPacket:packet];
+    }
 }
 
 @end

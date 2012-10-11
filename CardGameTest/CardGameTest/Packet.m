@@ -7,6 +7,7 @@
 //
 
 #import "Packet.h"
+#import "PacketSignInResponse.h"
 
 const size_t PACKET_HEADER_SIZE = 10;
 
@@ -39,7 +40,23 @@ const size_t PACKET_HEADER_SIZE = 10;
     int packetNumber = [data rw_int32AtOffset:4];
     PacketType packetType = [data rw_int16AtOffset:8];
     
-    return [Packet packetWithType:packetType];
+    Packet *packet;
+    switch (packetType)
+	{
+		case PacketTypeSignInRequest:
+			packet = [Packet packetWithType:packetType];
+			break;
+            
+		case PacketTypeSiginInResponse:
+			packet = [PacketSignInResponse packetWithData:data];
+			break;
+            
+		default:
+			NSLog(@"Error: Packet has invalid type");
+			return nil;
+	}
+    
+	return packet;
 }
 
 - (id)initWithType:(PacketType)pkType{
