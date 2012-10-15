@@ -18,6 +18,7 @@
 - (void)game:(Game*)game didQuitWithReason:(QuitReason)reason;
 - (void)gameWaitingForServerReady:(Game *)game;
 - (void)gameWaitingForClientsReady:(Game *)game;
+- (void)gameDidBegin:(Game *)game;
 
 @end
 
@@ -35,4 +36,6 @@
 - (Player *)playerWithPeerID:(NSString *)peerID;
 - (void)serverReceivedPacket:(Packet *)packet fromPlayer:(Player *)player;
 - (BOOL)receivedResponsesFromAllPlayers;
+- (void)beginGame;
+- (void)changeRelativePositionsOfPlayers;
 @end

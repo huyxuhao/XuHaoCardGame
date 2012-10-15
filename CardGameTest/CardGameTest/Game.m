@@ -90,7 +90,13 @@ typedef enum {
 #ifdef DEBUG
 				NSLog(@"the players are: %@", players);
 #endif
-			}
+                Packet *packet = [Packet packetWithType:PacketTypeClientReady];
+                
+                [self sendPacketToServer:packet];
+                
+                [self beginGame];
+			}                
+            
 			break;            
 		default:
 #ifdef DEBUG
@@ -122,6 +128,11 @@ typedef enum {
 			}
 			break;
             
+        case PacketTypeClientReady:
+            if(state == GameStateWaitingForReady && [self receivedResponsesFromAllPlayers]){
+                [self beginGame];
+            }
+            break;            
 		default:
 #ifdef DEBUG
 			NSLog(@"Server received unexpected packet: %@", packet);
@@ -210,6 +221,31 @@ typedef enum {
 			return NO;
 	}
 	return YES;
+}
+
+- (void)beginGame{
+    state = GameStateDealing;
+#ifdef DEBUG
+    NSLog(@"%@ The game should begin",self);
+#endif
+    [self.delegate gameDidBegin:self];
+}
+
+- (void)changeRelativePositionsOfPlayers
+{
+	NSAssert(!self.isServer, @"Must be client");
+    
+	Player *myPlayer = [self playerWithPeerID:session.peerID];
+	int diff = myPlayer.position;
+	myPlayer.position = PlayerPositionBottom;
+    
+	[players enumerateKeysAndObjectsUsingBlock:^(id key, Player *obj, BOOL *stop)
+     {
+         if (obj != myPlayer)
+         {
+             obj.position = (obj.position - diff) % 4;
+         }
+     }];
 }
 
 #pragma mark GKSessionDelegate

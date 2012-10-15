@@ -38,15 +38,16 @@ const size_t PACKET_HEADER_SIZE = 10;
         return nil;
     }
     
-    int packetNumber = [data rw_int32AtOffset:4];
+//    int packetNumber = [data rw_int32AtOffset:4];
     PacketType packetType = [data rw_int16AtOffset:8];
     
     Packet *packet;
     switch (packetType)
 	{
-		case PacketTypeSignInRequest:
-			packet = [Packet packetWithType:packetType];
-			break;
+		case PacketTypeSignInRequest:			
+        case PacketTypeClientReady:
+            packet = [Packet packetWithType:packetType];
+            break;
             
 		case PacketTypeSiginInResponse:
 			packet = [PacketSignInResponse packetWithData:data];
